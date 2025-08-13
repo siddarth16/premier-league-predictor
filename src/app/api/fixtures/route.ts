@@ -13,16 +13,20 @@ export async function GET(request: NextRequest) {
     let fixtures;
     
     if (upcoming === 'true') {
+      console.log(`🔄 Fetching upcoming fixtures for next ${days} days...`);
       fixtures = await Database.getUpcomingFixtures(days);
+      console.log(`📊 Found ${fixtures.length} upcoming fixtures in database`);
       
       // If no upcoming fixtures in database, try to fetch from API
-      if (fixtures.length === 0) {
+      if (fixtures.length === 0 && apiFootball.hasApiKey()) {
         try {
+          console.log('🌐 Attempting to fetch fixtures from API Football...');
           const apiFixtures = await apiFootball.getUpcomingFixtures(days);
+          console.log(`✅ Successfully fetched ${apiFixtures.length} fixtures from API`);
           await Database.saveFixtures(apiFixtures);
           fixtures = apiFixtures;
         } catch (apiError) {
-          console.warn('Failed to fetch fixtures from API:', apiError);
+          console.error('❌ Failed to fetch fixtures from API:', apiError);
         }
       }
     } else {

@@ -28,17 +28,23 @@ export class Database {
   static async getTeams(): Promise<Team[]> {
     try {
       if (apiFootball.hasApiKey()) {
+        console.log('🔄 Attempting to fetch teams from API Football...');
         const teams = await apiFootball.getTeams();
+        console.log(`✅ Successfully fetched ${teams.length} teams from API`);
         // Cache teams in mock database
         await this.saveTeams(teams);
         return teams;
+      } else {
+        console.log('⚠️ No API key available, using mock data');
       }
     } catch (error) {
-      console.warn('API Football unavailable, using cached data:', error);
+      console.error('❌ API Football request failed:', error);
+      console.log('🔄 Falling back to mock data');
     }
     
     // Fallback to mock data - ensure it's loaded into the database
     if (mockDB.teams.length === 0) {
+      console.log('📊 Loading mock teams data...');
       const mockTeams = this.getMockTeams();
       await this.saveTeams(mockTeams);
     }

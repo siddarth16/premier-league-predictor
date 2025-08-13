@@ -11,8 +11,16 @@ function getCurrentSeason(): number {
   const currentMonth = now.getMonth() + 1; // JavaScript months are 0-indexed
   
   // Premier League season typically starts in August
-  // If we're in January-July, we're in the second half of a season that started the previous year
-  // If we're in August-December, we're in the first half of a season that started this year
+  // However, for 2025, the season data may not be available yet
+  // So we'll use 2024 season (2024-25) as the most recent complete season
+  
+  // For now, always use 2024 as the current season until 2025-26 data is available
+  if (currentYear >= 2025) {
+    console.log('🏟️ Using 2024 season data (2024-25) as 2025-26 may not be available yet');
+    return 2024;
+  }
+  
+  // Original logic for previous years
   if (currentMonth >= 8) {
     return currentYear; // August onwards = new season starting this year
   } else {
@@ -73,6 +81,9 @@ export class ApiFootball {
       console.warn('⚠️  API_FOOTBALL_KEY not found in environment variables');
       console.warn('📝 Create a .env.local file with your API key from api-football.com');
       console.warn('🔄 App will use mock data for demonstration purposes');
+    } else {
+      console.log('✅ API_FOOTBALL_KEY found, will attempt to fetch real data');
+      console.log(`🏟️ Current season: ${CURRENT_SEASON}`);
     }
   }
 
