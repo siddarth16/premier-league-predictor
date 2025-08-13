@@ -37,8 +37,13 @@ export class Database {
       console.warn('API Football unavailable, using cached data:', error);
     }
     
-    // Fallback to mock data
-    return mockDB.teams.length > 0 ? mockDB.teams : this.getMockTeams();
+    // Fallback to mock data - ensure it's loaded into the database
+    if (mockDB.teams.length === 0) {
+      const mockTeams = this.getMockTeams();
+      await this.saveTeams(mockTeams);
+    }
+    
+    return mockDB.teams;
   }
 
   static async getTeamById(id: number): Promise<Team | null> {
@@ -68,6 +73,12 @@ export class Database {
   static async getUpcomingFixtures(days: number = 7): Promise<Fixture[]> {
     const now = new Date();
     const future = new Date(now.getTime() + (days * 24 * 60 * 60 * 1000));
+    
+    // If no fixtures in database, load mock data
+    if (mockDB.fixtures.length === 0) {
+      const mockFixtures = this.getMockFixtures();
+      await this.saveFixtures(mockFixtures);
+    }
     
     return mockDB.fixtures.filter(fixture => {
       const fixtureDate = new Date(fixture.date);
@@ -114,9 +125,13 @@ export class Database {
 
   // Standings operations
   static async getStandings(): Promise<Standing[]> {
-    return mockDB.standings.filter(standing => 
-      standing.team.id // This is a simplified filter, would be more complex with real DB
-    );
+    // If no standings in database, load mock data
+    if (mockDB.standings.length === 0) {
+      const mockStandings = this.getMockStandings();
+      await this.saveStandings(mockStandings);
+    }
+    
+    return mockDB.standings;
   }
 
   static async saveStandings(standings: Standing[]): Promise<void> {
@@ -263,6 +278,51 @@ export class Database {
         }
       }
     ];
+  }
+
+  static getMockStandings(): Standing[] {
+    const teams = this.getMockTeams();
+    
+    return teams.map((team, index) => ({
+      rank: index + 1,
+      team: team,
+      points: Math.max(0, 38 - (index * 2)), // Start of season, all teams at 0
+      goalsDiff: 0,
+      group: "Premier League",
+      form: "DDDDD", // Start of season
+      status: "same",
+      description: "Premier League",
+      all: {
+        played: 0,
+        win: 0,
+        draw: 0,
+        lose: 0,
+        goals: {
+          for: 0,
+          against: 0
+        }
+      },
+      home: {
+        played: 0,
+        win: 0,
+        draw: 0,
+        lose: 0,
+        goals: {
+          for: 0,
+          against: 0
+        }
+      },
+      away: {
+        played: 0,
+        win: 0,
+        draw: 0,
+        lose: 0,
+        goals: {
+          for: 0,
+          against: 0
+        }
+      }
+    }));
   }
 }
 
