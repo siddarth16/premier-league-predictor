@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# old subdirectory
-/premier-league-predictor
+# old subdirectory (but not the entire directory)
+/premier-league-predictor/.next
+/premier-league-predictor/node_modules
