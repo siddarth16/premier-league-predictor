@@ -29,10 +29,19 @@ export interface Fixture {
   timezone: string;
   date: string;
   timestamp: number;
+  periods: {
+    first: number | null;
+    second: number | null;
+  };
+  venue: {
+    id: number;
+    name: string;
+    city: string;
+  };
   status: {
     long: string;
     short: string;
-    elapsed?: number;
+    elapsed?: number | null;
   };
   league: League;
   teams: {
@@ -49,6 +58,14 @@ export interface Fixture {
       away: number | null;
     };
     fulltime: {
+      home: number | null;
+      away: number | null;
+    };
+    extratime: {
+      home: number | null;
+      away: number | null;
+    };
+    penalty: {
       home: number | null;
       away: number | null;
     };

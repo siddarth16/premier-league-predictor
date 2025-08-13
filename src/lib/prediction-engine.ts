@@ -103,7 +103,7 @@ export class PredictionEngine {
       // Use API Football's multi-season analysis or fallback to database
       const { apiFootball } = await import('./api-football');
       
-      let multiSeasonData = [];
+      let multiSeasonData: Array<{ season: number; stats: Record<string, unknown>; weight: number }> = [];
       
       try {
         if (apiFootball.hasApiKey()) {
@@ -120,7 +120,7 @@ export class PredictionEngine {
           try {
             const stats = await Database.getTeamStatistics(teamId, season);
             if (stats) {
-              multiSeasonData.push({ season, stats, weight });
+              multiSeasonData.push({ season, stats: stats as unknown as Record<string, unknown>, weight });
             }
           } catch (dbError) {
             console.warn(`No database data for team ${teamId} in season ${season}`);
