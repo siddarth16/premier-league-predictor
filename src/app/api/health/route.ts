@@ -20,6 +20,9 @@ export async function GET() {
       services: {
         api: {
           status: apiHealth ? 'up' : 'down',
+          configured: apiFootball.hasApiKey(),
+          keyPresent: !!process.env.API_FOOTBALL_KEY,
+          keyLength: process.env.API_FOOTBALL_KEY?.length || 0,
           usage: {
             used: apiFootball.getRequestCount(),
             remaining: apiFootball.getRemainingRequests(),
