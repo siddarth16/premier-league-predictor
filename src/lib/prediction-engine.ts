@@ -109,7 +109,7 @@ export class PredictionEngine {
         if (apiFootball.hasApiKey()) {
           multiSeasonData = await apiFootball.getMultiSeasonTeamStatistics(teamId);
         }
-      } catch (apiError) {
+      } catch {
         console.warn('API Football unavailable, using database fallback');
       }
 
@@ -122,13 +122,13 @@ export class PredictionEngine {
             if (stats) {
               multiSeasonData.push({ season, stats: stats as unknown as Record<string, unknown>, weight });
             }
-          } catch (dbError) {
+          } catch {
             console.warn(`No database data for team ${teamId} in season ${season}`);
           }
         }
       }
 
-      let weightedStats = {
+      const weightedStats = {
         homeAdvantage: 0,
         goalDifferential: 0,
         cleanSheetRatio: 0,

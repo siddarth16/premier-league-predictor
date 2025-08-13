@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState, useCallback, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
@@ -30,13 +30,7 @@ function AnalysisPageContent() {
   const [loading, setLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState<AnalysisData>({});
 
-  useEffect(() => {
-    if (fixtureId) {
-      fetchAnalysis(parseInt(fixtureId));
-    }
-  }, [fixtureId]);
-
-  const fetchAnalysis = async (id: number) => {
+  const fetchAnalysis = useCallback(async (id: number) => {
     setLoading(true);
     try {
       const response = await fetch(`/api/analysis?fixture_id=${id}`);
@@ -52,7 +46,13 @@ function AnalysisPageContent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [setError]);
+
+  useEffect(() => {
+    if (fixtureId) {
+      fetchAnalysis(parseInt(fixtureId));
+    }
+  }, [fixtureId, fetchAnalysis]);
 
   if (loading) {
     return <LoadingPage message="Loading match analysis..." />;

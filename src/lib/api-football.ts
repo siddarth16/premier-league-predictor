@@ -249,7 +249,7 @@ export class ApiFootball {
         if (stats) {
           results.push({ season, stats, weight });
         }
-      } catch (error) {
+      } catch {
         console.warn(`No statistics available for team ${teamId} in season ${season}`);
       }
     }
