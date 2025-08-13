@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const path = require('path');
+
 const nextConfig = {
   // Enable React Strict Mode for development
   reactStrictMode: true,
@@ -83,6 +85,15 @@ const nextConfig = {
   // ESLint configuration
   eslint: {
     ignoreDuringBuilds: false,
+  },
+  
+  // Webpack configuration for path mapping
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, './src'),
+    };
+    return config;
   },
 };
 
