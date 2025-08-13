@@ -73,6 +73,9 @@ export default function Dashboard() {
         <p className="text-xl text-gray-600">
           AI-powered match predictions and analysis
         </p>
+        <div className="mt-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full inline-block">
+          📊 Showing 2022-23 Season Data (API Limitation)
+        </div>
       </div>
 
       {/* Error Message */}
@@ -108,7 +111,7 @@ export default function Dashboard() {
             <div className="text-3xl font-bold text-blue-600 mb-2">
               {fixtures.length}
             </div>
-            <div className="text-sm text-gray-600">Upcoming Fixtures</div>
+            <div className="text-sm text-gray-600">Recent Fixtures (2023)</div>
           </CardContent>
         </Card>
         
@@ -146,8 +149,8 @@ export default function Dashboard() {
           <Card>
             <CardHeader>
               <div className="flex justify-between items-center">
-                <CardTitle>Upcoming Fixtures</CardTitle>
-                <Badge variant="info">Next 7 Days</Badge>
+                <CardTitle>Recent Fixtures</CardTitle>
+                <Badge variant="info">2022-23 Season</Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -159,7 +162,7 @@ export default function Dashboard() {
                 </div>
               ) : upcomingFixtures.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                  No upcoming fixtures found
+                  No recent fixtures from 2022-23 season found
                 </div>
               ) : (
                 <div className="space-y-4">

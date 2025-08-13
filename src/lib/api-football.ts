@@ -6,26 +6,11 @@ const API_BASE_URL = 'https://v3.football.api-sports.io';
 const PREMIER_LEAGUE_ID = 39; // Premier League ID in API Football
 // Dynamic season calculation based on current date
 function getCurrentSeason(): number {
-  const now = new Date();
-  const currentYear = now.getFullYear();
-  const currentMonth = now.getMonth() + 1; // JavaScript months are 0-indexed
-  
-  // Premier League season typically starts in August
-  // However, for 2025, the season data may not be available yet
-  // So we'll use 2024 season (2024-25) as the most recent complete season
-  
-  // For now, always use 2024 as the current season until 2025-26 data is available
-  if (currentYear >= 2025) {
-    console.log('🏟️ Using 2024 season data (2024-25) as 2025-26 may not be available yet');
-    return 2024;
-  }
-  
-  // Original logic for previous years
-  if (currentMonth >= 8) {
-    return currentYear; // August onwards = new season starting this year
-  } else {
-    return currentYear - 1; // January-July = season that started last year
-  }
+  // API Football Free Plan Limitation:
+  // Free tier only has access to seasons 2021, 2022, and 2023
+  // Always use 2023 as it's the latest available season on free plan
+  console.log('🏟️ Using 2023 season data (free plan limitation: only 2021-2023 available)');
+  return 2023;
 }
 
 const CURRENT_SEASON = getCurrentSeason();
@@ -153,15 +138,16 @@ export class ApiFootball {
     return fixtures;
   }
 
-  // Get upcoming fixtures for next N days
+  // Get recent fixtures from 2023 season (simulating "upcoming" for demo)
+  // Since free plan only has historical data, we'll get recent completed fixtures
   async getUpcomingFixtures(days: number = 7): Promise<Fixture[]> {
-    const today = new Date();
-    const futureDate = new Date(today.getTime() + (days * 24 * 60 * 60 * 1000));
+    console.log('📅 Free plan limitation: Getting recent 2023 fixtures instead of upcoming');
     
+    // Get fixtures from a specific timeframe in 2023 season
     const fixtures = await this.makeRequest<Fixture[]>('/fixtures', {
       league: PREMIER_LEAGUE_ID,
-      from: today.toISOString().split('T')[0],
-      to: futureDate.toISOString().split('T')[0]
+      season: 2023,
+      last: days // Get last N fixtures instead of next N
     });
     return fixtures;
   }
